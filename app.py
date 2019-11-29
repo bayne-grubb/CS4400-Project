@@ -7,7 +7,7 @@ app = Flask(__name__)
 @app.route("/")
 def index():
     return render_template('login.html')
-@app.route("/manCusReg/", methods=['POST'])
+@app.route("/manCusReg/", methods=['POST']) # make sure the requests are the right type(get,post etc.)
 def manCusReg():
     #do stuff i.e.
     obj = request.get_json() # the data you send from front end
