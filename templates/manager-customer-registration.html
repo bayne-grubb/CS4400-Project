@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-<form action="" method="post">
 
     <div class="container">
         <label for="fname"><b>First Name</b></label>
-        <input type="text" placeholder="Enter First Name" name="fname" required>
+        <input type="text" id="fnameVal" placeholder="Enter First Name" name="fname" required>
         <label for="lname"><b>Last Name</b></label>
-        <input type="text" placeholder="Enter Last Name" name="lname" required>
+        <input type="text" id="lnameVal" placeholder="Enter Last Name" name="lname" required>
 
     </div>
     <div class="container">
         <label for="uname"><b>Username</b></label>
-        <input type="text" placeholder="Enter Username" name="uname" required>
+        <input type="text" id="userVal" placeholder="Enter Username" name="uname" required>
 
         <label for="company"><b>Company</b></label>
-        <select name="company" required>
+        <select name="company" id=compVal" required>
             <option value="amc"> AMC</option>
             <option value="gtc"> GTC</option>
         </select>
@@ -22,21 +21,21 @@
 
     <div>
         <label for="psw"><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="psw" required>
+        <input type="password" id="passVal" placeholder="Enter Password" name="psw" required>
         <label for="cpsw"><b>Confirm Password</b></label>
-        <input type="password" placeholder="Confirm Password" name="cpsw" required>
+        <input type="password" id="conPassVal" placeholder="Confirm Password" name="cpsw" required>
     </div>
 
     <div>
         <label for="street-address"><b>Street Address</b></label>
-        <input type="street-address" placeholder="Enter Street Address" name="street-address" required>
+        <input type="street-address" id="streetVal" placeholder="Enter Street Address" name="street-address" required>
     </div>
 
     <div>
         <label for="city"><b>City</b></label>
-        <input type="city" placeholder="Enter Street Address" name="city" required>
+        <input type="city" id="cityVal" placeholder="Enter Street Address" name="city" required>
         <label for="state"><b>State</b></label>
-        <select name="state" required>
+        <select name="state" id="stateVal" required>
             <option value="AL">Alabama</option>
             <option value="AK">Alaska</option>
             <option value="AZ">Arizona</option>
@@ -94,9 +93,73 @@
     </div>
 
     <div>
-        <button type="submit">Register</button>
+        <button id="genBtn">Register</button>
         <button> Back</button>
     </div>
-</form>
 </body>
 </html>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+    $("#genBtn").button().click(function(){
+        fname = $("#fnameVal").val();
+        lname = $("#lnameVal").val();
+        username = $("#userVal").val();
+        company = $("#compVal").val();
+        if ($("#passVal").val() == $("#conPassVal").val()) {
+            password = $("#passVal").val();
+        }
+        street = $("#streetVal").val();
+        city = $("#cityVal").val();
+        state = $("#stateVal").val();
+        if (noneEmpty(fname, lname, username, company, password, street, city, state)) {
+               $.ajax({
+                type: "POST",
+                url: "manCusReg/",
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify({
+                    fname: fname,
+                    lname: lname,
+                    username: username,
+                    company: company,
+                    password: password,
+                    street: street,
+                    city: city,
+                    state: state
+                }),
+                success: function(response) {
+                    console.log(response);
+                    // newUrl = response['newUrl'];
+                    // $( "#newUrl" ).val(window.location.href + newUrl);
+                    // $("#sucAlert").slideDown(1000, function(){
+                    //     setTimeout(function(){
+                    //         $("#sucAlert").slideUp(1000);
+                    //     }, 1000);
+                    // });
+                },
+                error: function(response) {
+                    alert(response);
+                }
+            });
+        } else {
+            alert("Invalid Url");
+        }
+
+    });
+});
+    /**
+    This function will check if any fields are empty.
+
+    @param:
+    @return bool - valid string or not
+    */
+    function noneEmpty(fname, lname, username, company, password, street, city, state) {
+        if (fname == "" || lname == "" || username == "" || company == "" || password == "" || street== ""|| city== ""|| state== "") {
+            return false;
+        }
+        return true;
+    }
+</script>

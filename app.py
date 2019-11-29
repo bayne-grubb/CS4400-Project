@@ -7,12 +7,16 @@ app = Flask(__name__)
 @app.route("/")
 def index():
     return render_template('login.html')
-@app.route("/register")
-def register():
-    return render_template(url_for('register-navigation'))
-
-
-
+@app.route("/manCusReg/", methods=['POST'])
+def manCusReg():
+    #do stuff i.e.
+    obj = request.get_json() # the data you send from front end
+    fname = obj['fname'] # do this with all of the params
+    # now you have the data, pass it to pymysql
+    return obj # need to return a response just to make it not fail
+@app.route("/manCusRegNav")
+def manCusRegNav():
+    return render_template('manager-customer-registration.html')
 
 if __name__ == '__main__':
     app.run()
