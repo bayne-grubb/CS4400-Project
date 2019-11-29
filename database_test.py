@@ -28,7 +28,7 @@ def user_login(username, password):
     return json.dumps(cur.fetchall())
 
 
-#user_login('calcultron', '333333333')
+# print(user_login('calcultron', '333333333'))
 
 def user_register(username, password, firstname, lastname):
     cur = setup_connection()
@@ -75,7 +75,7 @@ def admin_filter_user(username, status, sort_by, sort_direction):
     cur.execute('SELECT * FROM AdFilterUser')
     return json.dumps(cur.fetchall())
 
-print(admin_filter_user('', 'Approved', 'username', 'DESC'))
+# print(admin_filter_user('', 'Approved', 'username', 'DESC'))
 
 
 def admin_filter_company(com_name, min_city, max_city, min_theater, max_theater, min_employee, max_employee, sort_by,

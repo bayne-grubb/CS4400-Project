@@ -1,7 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-<form action="" method="post">
-
+<head>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <script>
+            var messages = {{ messages | safe}};
+            for (var i = 0; i < messages.length; i++) {
+                alert(messages[i])
+            }
+        </script>    
+    {% endif %}
+  {% endwith %}
+</head>
+<form action="regNav" method="POST">
   <div class="container">
     <label for="uname"><b>Username</b></label>
     <input type="text" placeholder="Enter Username" name="uname" required>
@@ -13,8 +24,8 @@
 
     </div>
   <div>
-        <button type="submit">Login</button>
-        <button > Register</button>
+        <button type="submit" name="login">Login</button>
+        <button type="submit" name="register"> Register</button>
   </div>
 </form>
 </body>
