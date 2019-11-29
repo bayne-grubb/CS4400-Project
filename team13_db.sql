@@ -45,7 +45,7 @@ CREATE TABLE Manager
 username VARCHAR(50) NOT NULL UNIQUE,
 manStreet VARCHAR(50),
 manCity VARCHAR(50),
-manState CHAR(3),
+manState CHAR(2),
 manZipcode CHAR(5),
 comName VARCHAR(50),
 PRIMARY KEY (username), #NEED TO CHANGE BC THIS IS WEAK ENTITY???
@@ -61,7 +61,7 @@ comName VARCHAR(50) NOT NULL,
 thCapacity INT NOT NULL,
 thStreet VARCHAR(50) NOT NULL,
 thCity VARCHAR(50) NOT NULL,
-thState VARCHAR(3) NOT NULL,
+thState CHAR(2) NOT NULL,
 thZipcode CHAR(5) NOT NULL,
 thManagerUsername VARCHAR(50) NOT NULL,
 PRIMARY KEY (thName, comName),
@@ -72,7 +72,7 @@ DROP TABLE IF EXISTS CustomerCreditCard;
 CREATE TABLE CustomerCreditCard
 (
 username VARCHAR(50),
-creditCardNum VARCHAR(16) NOT NULL UNIQUE CHECK(char_length(creditCardNum) = 16),
+creditCardNum VARCHAR(16) NOT NULL UNIQUE,
 PRIMARY KEY (creditCardNum),
 FOREIGN KEY (username) REFERENCES User(username)
 );
@@ -116,7 +116,7 @@ movReleaseDate DATE NOT NULL,
 movPlayDate DATE NOT NULL,
 thName VARCHAR(50) NOT NULL,
 comName VARCHAR(50) NOT NULL,
-creditCardNum VARCHAR(16) NOT NULL CHECK(char_length(creditCardNum) = 16),
+creditCardNum VARCHAR(16) NOT NULL,
 PRIMARY KEY (movName, movReleaseDate, movPlayDate, thName, comName, creditCardNum),
 FOREIGN KEY (creditCardNum) REFERENCES CustomerCreditCard(creditCardNum),
 FOREIGN KEY (movName,movReleaseDate, movPlayDate, thName, comName) REFERENCES MoviePlay(movName,movReleaseDate, movPlayDate, thName, comName)
@@ -276,12 +276,12 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS manager_only_register;
 DELIMITER $$
 CREATE PROCEDURE `manager_only_register`(IN i_username VARCHAR(50), IN i_password VARCHAR(50), IN i_firstname VARCHAR(50), IN i_lastname VARCHAR(50), i_comName VARCHAR(50),
-    i_empStreet VARCHAR(50), i_empCity VARCHAR(50), i_empState VARCHAR(50), i_empZipcode VARCHAR(50))
+    i_empStreet VARCHAR(50), i_empCity VARCHAR(50), i_empState VARCHAR(3), i_empZipcode CHAR(5))
 BEGIN    
     INSERT INTO User (username, password, firstname, lastname, status) VALUES (i_username, MD5(i_password), i_firstname, i_lastname, "Pending");
-	  INSERT INTO Employee (username) VALUES (i_username);
+	INSERT INTO Employee (username) VALUES (i_username);
     INSERT INTO Manager (username, manStreet, manCity, manState, manZipcode, comName) 
-		VALUES (i_username, i_empStreet, i_empCity, i_empState, i_empZipcode, i_comName);
+	VALUES (i_username, i_empStreet, i_empCity, i_empState, i_empZipcode, i_comName);
 END
 $$
 DELIMITER ;
@@ -290,7 +290,7 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS manager_customer_register;
 DELIMITER $$
 CREATE PROCEDURE `manager_customer_register`(IN i_username VARCHAR(50), IN i_password VARCHAR(50), IN i_firstname VARCHAR(50), IN i_lastname VARCHAR(50), i_comName VARCHAR(50),
-    i_empStreet VARCHAR(50), i_empCity VARCHAR(50), i_empState VARCHAR(50), i_empZipcode VARCHAR(50))
+    i_empStreet VARCHAR(50), i_empCity VARCHAR(50), i_empState CHAR(2), i_empZipcode CHAR(5))
 BEGIN    
     INSERT INTO User (username, password, firstname, lastname, status) VALUES (i_username, MD5(i_password), i_firstname, i_lastname, "Pending");
 	INSERT INTO Employee (username) VALUES (i_username);
@@ -333,7 +333,7 @@ BEGIN
     WHERE 
 		(thName = i_thName OR i_thName = "ALL" OR i_thName = "") AND
         (comName = i_comName OR i_comName = "ALL" or i_comName = "") AND
-        (thCity = i_city OR i_city = "" OR i_city = "") AND
+        (thCity = i_city OR i_city = "ALL" OR i_city = "") AND
         (thState = i_state OR i_state = "ALL" or i_state = "");
 END$$
 DELIMITER ;
@@ -404,7 +404,7 @@ BEGIN
 		NATURAL JOIN
         Company
     WHERE 
-		(comName = i_comName OR i_comName = "ALL");
+		(comName = i_comName OR i_comName = "ALL" or i_comName = "");
 END
 $$
 DELIMITER 
@@ -545,13 +545,15 @@ BEGIN
     CREATE TABLE CosFilterMovie
 	SELECT movName, MoviePlay.thName, thStreet, thCity, thState, thZipcode, Theater.comName, movPlayDate, movReleaseDate
 	FROM MoviePlay join Theater on MoviePlay.thName = Theater.thName AND MoviePlay.comName = Theater.comName
-	WHERE (i_movName = movName or i_movName = "" or i_movName = "ALL") AND (i_comName = Theater.comName or i_comName = "ALL" or i_comName = "") AND (i_city = thCity OR i_city = "") AND (i_state = thState or i_state = "") AND (i_minMovPlayDate is null or movPlayDate >= i_minMovPlayDate ) AND (i_maxMovPlayDate is null or movPlayDate <= i_maxMovPlayDate);
+	WHERE (i_movName = movName or i_movName = "" or i_movName = "ALL") AND (i_comName = Theater.comName or i_comName = "ALL" or i_comName = "") 
+    AND (i_city = thCity OR i_city = "") AND (i_state = thState or i_state = "") AND (i_minMovPlayDate is null or movPlayDate >= i_minMovPlayDate ) 
+    AND (i_maxMovPlayDate is null or movPlayDate <= i_maxMovPlayDate);
 END$$
 DELIMITER ;
 
 DROP PROCEDURE IF EXISTS customer_view_mov;
 DELIMITER $$
-CREATE PROCEDURE `customer_view_mov`(IN i_creditCardNum CHAR(16), i_movName VARCHAR(50), i_movReleaseDate DATE, i_thName VARCHAR(50), i_comName VARCHAR(50), i_movPlayDate VARCHAR(50))
+CREATE PROCEDURE `customer_view_mov`(IN i_creditCardNum CHAR(16), i_movName VARCHAR(50), i_movReleaseDate DATE, i_thName VARCHAR(50), i_comName VARCHAR(50), i_movPlayDate DATE)
 BEGIN
 		INSERT INTO CustomerViewMovie (movName, movReleaseDate, movPlayDate, thName, comName, creditCardNum) 
 		select i_movName,i_movReleaseDate,i_movPlayDate, i_thName, i_comName, i_creditCardNum
