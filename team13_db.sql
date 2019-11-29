@@ -266,8 +266,9 @@ DELIMITER $$
 CREATE PROCEDURE `customer_add_creditcard`(IN i_username VARCHAR(50), IN i_creditCardNum CHAR(16))
 BEGIN 
     set @num = (select count(creditCardNum) from CustomerCreditCard left join User using(username) where username=i_username);
-	IF char_length(i_creditCardNum) = 16 AND @num < 5 THEN 
-		INSERT INTO CustomerCreditCard (username, creditCardNum) VALUES (i_username, i_creditCardNum);
+	  IF @num < 5 THEN 
+		  INSERT INTO CustomerCreditCard (username, creditCardNum) 
+      VALUES (CASE WHEN char_length(i_creditCardNum) = 16 THEN i_username ELSE null END, CASE WHEN char_length(i_creditCardNum) = 16 THEN i_creditCardNum ELSE null END);
     END IF;
 END 
 $$
@@ -293,7 +294,7 @@ CREATE PROCEDURE `manager_customer_register`(IN i_username VARCHAR(50), IN i_pas
     i_empStreet VARCHAR(50), i_empCity VARCHAR(50), i_empState VARCHAR(50), i_empZipcode VARCHAR(50))
 BEGIN    
     INSERT INTO User (username, password, firstname, lastname, status) VALUES (i_username, MD5(i_password), i_firstname, i_lastname, "Pending");
-	INSERT INTO Employee (username) VALUES (i_username);
+	  INSERT INTO Employee (username) VALUES (i_username);
     INSERT INTO Manager (username, comName, manStreet, manCity, manState, manZipcode)
 		VALUES (i_username, i_comName, i_empStreet, i_empCity, i_empState, i_empZipcode);
     INSERT INTO Customer (username) VALUES (i_username);
@@ -307,9 +308,10 @@ DELIMITER $$
 CREATE PROCEDURE `manager_customer_add_creditcard`(IN i_username VARCHAR(50), IN i_creditCardNum CHAR(16))
 BEGIN 
 	set @num = (select count(creditCardNum) from CustomerCreditCard left join User using(username) where username=i_username);
-	IF char_length(i_creditCardNum) = 16 AND @num < 5 THEN 
-		INSERT INTO CustomerCreditCard (username, creditCardNum) VALUES (i_username, i_creditCardNum);
-    END IF;
+	IF @num < 5 THEN 
+    INSERT INTO CustomerCreditCard (username, creditCardNum) 
+    VALUES (CASE WHEN char_length(i_creditCardNum) = 16 THEN i_username ELSE null END, CASE WHEN char_length(i_creditCardNum) = 16 THEN i_creditCardNum ELSE null END);
+  END IF;
 END 
 $$
 DELIMITER ;
@@ -531,7 +533,7 @@ BEGIN
 	INSERT INTO MoviePlay (thName, comName, movName, movReleaseDate, movPlayDate)
 		SELECT thName, Theater.comName, i_movName, i_movReleaseDate, i_movPlayDate
 		FROM Manager JOIN Theater ON Manager.username = Theater.thManagerUsername
-		WHERE username = i_manUsername;
+		WHERE username = i_manUsername AND i_movPlayDate >= i_movReleaseDate;
 END$$
 DELIMITER ;
 
