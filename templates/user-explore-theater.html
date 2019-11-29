@@ -2,30 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Create Theater</title>
+    <title> Explore Theater </title>
 </head>
 <body>
-
-    <form action="" method="post">
-
-  <div class="container">
-      <label for="tname"><b>Name</b></label>
-    <input type="text" placeholder="Enter Theater Name" name="tname" required>
-    <label for="company"><b>Company</b></label>
-        <select name="company" required>
-            <option value="amc"> AMC</option>
-            <option value="gtc"> GTC</option>
-        </select>
-
-  </div>
-  <div>
-        <label for="street-address"><b>Street Address</b></label>
-        <input type="street-address" placeholder="Enter Street Address" name="street-address" required>
-    </div>
-
-    <div>
+<div>
+    <label for="tname"> <b> Theater Name </b></label>
+    <select name="tname">
+    </select>
+    <label for="cname"> <b> Company Name </b></label>
+    <select name="cname">
+    </select>
+</div>
+<div>
+    <button>Filter</button>
+</div>
+<div>
         <label for="city"><b>City</b></label>
-        <input type="city" placeholder="Enter Street Address" name="city" required>
+        <input name="city" type="text">
         <label for="state"><b>State</b></label>
         <select name="state" required>
             <option value="AL">Alabama</option>
@@ -80,22 +73,12 @@
             <option value="WI">Wisconsin</option>
             <option value="WY">Wyoming</option>
         </select>
-        <label for="zip"><b>Zipcode</b></label>
-        <input name="zip" placeholder="Enter Zipcode" required type="zip">
     </div>
-    <div>
-        <label for="capacity"><b>Capacity</b></label>
-        <input name="capacity" placeholder="Enter Zipcode" required type="capacity">
-        <label for="manager"><b>Manager</b></label>
-        <select name="manager"></select>
-    </div>
-
-    <div>
-        <button type="submit">Create</button>
-        <button> Back</button>
-    </div>
-</form>
-
-
+<div>
+    <button>Back</button>
+    <label for="vdate"> Visit Date </label>
+    <input name="vdate" placeholder="YYYY/MM/DD">
+    <button> Log Visit </button>
+</div>
 </body>
 </html>

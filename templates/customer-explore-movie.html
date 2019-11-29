@@ -2,30 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Create Theater</title>
+    <title>Explore Movie</title>
 </head>
 <body>
-
-    <form action="" method="post">
-
-  <div class="container">
-      <label for="tname"><b>Name</b></label>
-    <input type="text" placeholder="Enter Theater Name" name="tname" required>
-    <label for="company"><b>Company</b></label>
-        <select name="company" required>
-            <option value="amc"> AMC</option>
-            <option value="gtc"> GTC</option>
-        </select>
-
-  </div>
-  <div>
-        <label for="street-address"><b>Street Address</b></label>
-        <input type="street-address" placeholder="Enter Street Address" name="street-address" required>
+<form>
+    <div>
+        <label for="mname"> <b>Movie Name</b> </label>
+    <select name="mname" required>
+        <!-- populate from db -->
+    </select>
+        <label for="cname"> <b>Company Name</b> </label>
+    <select name="cname" required>
+        <!-- populate from db -->
+    </select>
     </div>
-
     <div>
         <label for="city"><b>City</b></label>
-        <input type="city" placeholder="Enter Street Address" name="city" required>
+        <input name="city" type="text">
         <label for="state"><b>State</b></label>
         <select name="state" required>
             <option value="AL">Alabama</option>
@@ -80,22 +73,26 @@
             <option value="WI">Wisconsin</option>
             <option value="WY">Wyoming</option>
         </select>
-        <label for="zip"><b>Zipcode</b></label>
-        <input name="zip" placeholder="Enter Zipcode" required type="zip">
     </div>
     <div>
-        <label for="capacity"><b>Capacity</b></label>
-        <input name="capacity" placeholder="Enter Zipcode" required type="capacity">
-        <label for="manager"><b>Manager</b></label>
-        <select name="manager"></select>
+        <label for="play-date1"><b>Play Date</b></label>
+        <input type="text" placeholder="YYYY/MM/DD" name="play-date1" required>
+        <label for="playe-date2"> <b>--</b> </label>
+        <input type="text" placeholder="YYYY/MM/DD" name="play-date2" required>
     </div>
-
     <div>
-        <button type="submit">Create</button>
-        <button> Back</button>
+        <button type="submit">Filter</button>
+    </div>
+    <div>
+        <!-- fill table from db here -->
+    </div>
+    <div>
+        <button>Back</button>
+        <select>
+            <!-- fill cc numbers from db -->
+        </select>
+        <button>View</button>
     </div>
 </form>
-
-
 </body>
 </html>

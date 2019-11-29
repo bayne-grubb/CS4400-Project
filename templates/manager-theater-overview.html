@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Theater Overview</title>
+</head>
+<body>
+<form action="submit">
+    <div>
+        <label for="mname"><b>Movie Name (Include)</b></label>
+        <input type="text" placeholder="Enter Movie Name" name="mname" required>
+        <label for="mduration1"><b>Movie Duration</b></label>
+        <input type="text" name="mduration1" required>
+        <label for="mduration2"><b>--</b></label>
+        <input type="text" name="mduration2" required>
+    </div>
+    <div>
+        <label for="mrelease1"><b>Movie Release Date</b></label>
+        <input type="text" name="mrelease1" required>
+        <label for="mrelease2"><b>--</b></label>
+        <input type="text" name="mrelease2" required>
+    </div>
+    <div>
+        <label for="mplaydate1"><b>Movie Play Date</b></label>
+        <input type="text" name="mplaydate1" required>
+        <label for="mplaydate2"><b>--</b></label>
+        <input type="text" name="mplaydate2" required>
+    </div>
+    <div>
+        <label for="checkbox"><b>Only Include Not Played Movies</b></label>
+        <input type="checkbox" name="checkbox" required>
+    </div>
+    <div>
+        <button type="submit">Filter</button>
+    </div>
+</form>
+<div>
+    <!--
+    table goes here
+    -->
+</div>
+<div>
+    <button>Back</button>
+</div>
+</body>
+</html>

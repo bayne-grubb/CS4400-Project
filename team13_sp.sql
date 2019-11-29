@@ -1,3 +1,4 @@
+
 DROP PROCEDURE IF EXISTS user_login;
 DELIMITER $$
 CREATE PROCEDURE `user_login`(IN i_username VARCHAR(50), IN i_password VARCHAR(50))
@@ -159,18 +160,15 @@ CREATE PROCEDURE `admin_view_comDetail_th`(IN i_comName VARCHAR(50))
 BEGIN
     DROP TABLE IF EXISTS AdComDetailTh;
     CREATE TABLE AdComDetailTh
-	SELECT thName, thManagerUsername, thCity, thState, thCapacity 
-    FROM Theater
+	SELECT thName, manusername, thCity, thState, capacity 
+    FROM theater
 		NATURAL JOIN
-        COMPANY
+        company
     WHERE 
 		(comName = i_comName OR i_comName = "ALL");
 END
 $$
-DELIMITER ;
-
-
-
+DELIMITER 
 
 DROP PROCEDURE IF EXISTS admin_view_comDetail_emp;
 DELIMITER $$
@@ -178,12 +176,12 @@ CREATE PROCEDURE `admin_view_comDetail_emp`(IN i_comName VARCHAR(50))
 BEGIN
     DROP TABLE IF EXISTS AdComDetailEmp;
     CREATE TABLE AdComDetailEmp
-	SELECT empFirstname, empLastname 
-    FROM Employee
+	SELECT firstname, lastname
+    FROM user
 		NATURAL JOIN
-        COMPANY
+        company
     WHERE 
-		(comName = i_comName OR i_comName = "ALL");
+		user.username in (select username from employee) and (company.comName = i_comName OR i_comName = "ALL");
 END
 $$
 DELIMITER ;
@@ -194,14 +192,14 @@ DROP PROCEDURE IF EXISTS admin_create_mov;
 DELIMITER $$
 CREATE PROCEDURE `admin_create_mov`(IN i_movName VARCHAR(50), i_movDuration INT, i_movReleas DATE)
 BEGIN
-		INSERT INTO Movie (name, duration, release_date) VALUES (i_movName, i_movDuration, i_movReleas);
+		INSERT INTO movie (name, duration, release_date) VALUES (i_movName, i_movDuration, i_movReleas);
 END
 $$
 DELIMITER ;
 
 DROP PROCEDURE IF EXISTS admin_filter_company;
 DELIMITER $$
-CREATE PROCEDURE `user_filter_visitHistory`(IN i_comName VARCHAR(50), IN i_minCity INT, IN i_maxCity INT, IN i_minTheater INT, IN i_maxTheater INT, IN i_minEmployee INT, IN i_maxEmployee INT, IN i_sortBy VARCHAR(20), IN i_sortDirection VARCHAR(4))
+CREATE PROCEDURE `admin_filter_company`(IN i_comName VARCHAR(50), IN i_minCity INT, IN i_maxCity INT, IN i_minTheater INT, IN i_maxTheater INT, IN i_minEmployee INT, IN i_maxEmployee INT, IN i_sortBy VARCHAR(20), IN i_sortDirection VARCHAR(4))
 BEGIN
     DROP TABLE IF EXISTS AdFilterCom;
     CREATE TABLE AdFilterCom
@@ -214,15 +212,15 @@ BEGIN
 	ORDER BY 
 		(CASE
 			WHEN i_sortBy = "comName" AND i_sortDirection = "ASC" THEN comName
-			WHEN i_sortBy = "numCityCover" AND i_sortDirection = "ASC" THEN numCityCover
-			WHEN i_sortBy = "numTheater" AND i_sortDirection = "ASC" THEN numTheater
-			WHEN i_sortBy = "numEmployee" AND i_sortDirection = "ASC" THEN numEmployee
+			WHEN i_sortBy = "numCityCover" AND i_sortDirection = "ASC" THEN COUNT(DISTINCT thCity, thState)
+			WHEN i_sortBy = "numTheater" AND i_sortDirection = "ASC" THEN COUNT(DISTINCT(thName))
+			WHEN i_sortBy = "numEmployee" AND i_sortDirection = "ASC" THEN COUNT(DISTINCT(username))
 		END) ASC,
 		(CASE 
 			WHEN i_sortBy = "comName" THEN comName
-			WHEN i_sortBy = "numCityCover" THEN numCityCover
-			WHEN i_sortBy = "numTheater" THEN numTheater
-			WHEN i_sortBy = "numEmployee" THEN numEmployee
+			WHEN i_sortBy = "numCityCover" THEN COUNT(DISTINCT thCity, thState)
+			WHEN i_sortBy = "numTheater" THEN COUNT(DISTINCT(thName))
+			WHEN i_sortBy = "numEmployee" THEN COUNT(DISTINCT(username))
 			ELSE comName
 		END) DESC;
 END$$
@@ -249,14 +247,14 @@ BEGIN
 	ORDER BY 
 		(CASE
 			WHEN i_sortBy = "username" AND i_sortDirection = "ASC" THEN username
-			WHEN i_sortBy = "creditCardCount" AND i_sortDirection = "ASC" THEN creditCardCount
+			WHEN i_sortBy = "creditCardCount" AND i_sortDirection = "ASC" THEN COUNT(creditCardNum)
 			WHEN i_sortBy = "userType" AND i_sortDirection = "ASC" THEN  userType
 			WHEN i_sortBy = "status" AND i_sortDirection = "ASC" THEN status
 			ELSE username
 		END) ASC,
 		(CASE 
 			WHEN i_sortBy = "username" THEN username
-			WHEN i_sortBy = "creditCardCount" THEN creditCardCount
+			WHEN i_sortBy = "creditCardCount" THEN COUNT(creditCardNum)
 			WHEN i_sortBy = "userType" THEN  userType
 			WHEN i_sortBy = "status" THEN status
 			ELSE username
@@ -290,7 +288,7 @@ DELIMITER ;
 
 DROP PROCEDURE IF EXISTS customer_filter_mov;
 DELIMITER $$
-CREATE PROCEDURE `manager_filter_th`(IN i_movName VARCHAR(50), IN i_comName VARCHAR(50), IN i_city VARCHAR(50), IN i_state VARCHAR(50), IN i_minMovPlayDate DATE, IN i_maxMovPlayDate DATE, IN i_minMovPlayDate DATE, IN i_maxMovPlayDate DATE)
+CREATE PROCEDURE `customer_filter_mov`(IN i_movName VARCHAR(50), IN i_comName VARCHAR(50), IN i_city VARCHAR(50), IN i_state VARCHAR(50), IN i_minMovPlayDate DATE, IN i_maxMovPlayDate DATE)
 BEGIN
     DROP TABLE IF EXISTS CosFilterMovie;
     CREATE TABLE CosFilterMovie
@@ -298,34 +296,4 @@ BEGIN
 	FROM movieplay join theater using(thName)
 	WHERE (i_movName = movName) AND (i_comName = comname) AND (i_city = thCity OR i_city = "") AND (i_state = thState) AND (movPlayDate >= i_minMovPlayDate) AND (movPlayDate <= i_maxMovPlayDate);
 END$$
-DELIMITER ;
-
-DROP PROCEDURE IF EXISTS customer_view_mov;
-DELIMITER $$
-CREATE PROCEDURE `customer_view_mov`(IN i_creditCardNum CHAR(16), i_movName VARCHAR(50), i_movReleaseDate DATE, i_thName VARCHAR(50), i_comName VARCHAR(50), i_movPlayDate VARCHAR(50))
-BEGIN
-		INSERT INTO customerviewmovie (movName, movReleaseDate, movPlayDate, thName, comName, creditCardNum) 
-		select i_movName,i_movReleaseDate,i_movPlayDate, i_thName, i_comName, i_creditCardNum
-		where (select COUNT(*) from customerviewmovie where creditCardNum in
-        (select creditCardNum from customercreditcard where username = 
-        (select username from customercreditcard where creditCardNum = i_creditCardNum))
-        AND movPlayDate = i_movPlayDate) < 3;
-END
-$$
-DELIMITER ;
-
-DROP PROCEDURE IF EXISTS customer_view_history;
-DELIMITER $$
-CREATE PROCEDURE `customer_view_history`(IN i_cusUsername VARCHAR(50))
-BEGIN
-    DROP TABLE IF EXISTS CosViewHistory;
-    CREATE TABLE CosViewHistory
-	SELECT movName, thName, comName, creditCardNum, movPlayDate 
-    FROM 
-        customerviewmovie
-    WHERE 
-		creditCardNum in 
-        (select creditCardNum from customercreditcard where username = i_cusUsername);
-END
-$$
 DELIMITER ;
