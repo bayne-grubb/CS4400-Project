@@ -125,5 +125,20 @@ def manCusRegi():
     fname = obj['fname'] # do this with all of the params
     # now you have the data, pass it to pymysql
     return obj # need to return a response just to make it not fail
+@app.route("/cusFilMov/", methods=['GET']) # make sure the requests are the right type(get,post etc.)
+def cusFilMov():
+    #do stuff i.e.
+    obj = request.get_json() # the data you send from front end
+    query = obj['query'] # do this with all of the params
+
+    movie_name = obj['movie_name'],
+    com_name = obj['com_name'],
+    city = obj['city'],
+    state = obj['state'],
+    min_mov_play_date = obj['min_mov_play_date'],
+    max_mov_play_date = obj['max_mov_play_date']
+    # now you have the data, pass it to pymysql
+    data = customer_filter_mov(movie_name, com_name, city, state, min_mov_play_date, max_mov_play_date)
+    return data # need to return a response just to make it not fail
 if __name__ == '__main__':
     app.run()

@@ -8,19 +8,19 @@
 
     <div>
         <label for="mname"> <b>Movie Name</b> </label>
-    <select name="mname" required>
+    <select id="movie" name="mname" required>
         <!-- populate from db -->
     </select>
         <label for="cname"> <b>Company Name</b> </label>
-    <select name="cname" required>
+    <select id = "company" name="cname" required>
         <!-- populate from db -->
     </select>
     </div>
     <div>
         <label for="city"><b>City</b></label>
-        <input name="city" type="text">
+        <input id="city" name="city" type="text">
         <label for="state"><b>State</b></label>
-        <select name="state" required>
+        <select id = "state" name="state" required>
             <option value="AL">Alabama</option>
             <option value="AK">Alaska</option>
             <option value="AZ">Arizona</option>
@@ -75,15 +75,15 @@
         </select>
     </div>
     <div>
-        <label for="play-date1"><b>Play Date</b></label>
-        <input type="text" placeholder="YYYY/MM/DD" name="play-date1" required>
+        <label  for="play-date1"><b>Play Date</b></label>
+        <input id="pd1" type="text" placeholder="YYYY/MM/DD" name="play-date1" required>
         <label for="playe-date2"> <b>--</b> </label>
-        <input type="text" placeholder="YYYY/MM/DD" name="play-date2" required>
+        <input id="pd2" type="text" placeholder="YYYY/MM/DD" name="play-date2" required>
     </div>
     <div>
-        <button type="submit">Filter</button>
+        <button id = "filBtn">Filter</button>
     </div>
-    <div>
+    <div id = >
         <!-- fill table from db here -->
     </div>
     <div>
@@ -104,5 +104,39 @@
     $("#backBtn").button().click(function(){
         window.location.href = '/';
     });
+    $("#filBtn").button().click(function(){
+        movie_name = $("#movie").val();
+        com_name = $("#company").val();
+        city = $("#city").val();
+        state = $("#state").val();
+        min_mov_play_date = $("#pd1").val();
+        max_mov_play_date = $("#pd2").val();
+        query = "customer_filter_mov"
+        $.ajax({
+            type: "GET",
+            url: "get/",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({
+                query: query,
+                params: movie_name,
+                com_name: com_name,
+                city: city,
+                state: state,
+                min_mov_play_date: min_mov_play_date,
+                max_mov_play_date: max_mov_play_date
+            }),
+            success: function(response) {
+                console.log(response);
+
+            },
+            error: function(response) {
+                alert("failed");
+            }
+        });
+    });
+
+
+
 
 </script>

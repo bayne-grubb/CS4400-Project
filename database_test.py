@@ -4,7 +4,7 @@ import json
 import datetime
 
 def setup_connection():
-    con = pymysql.connect('localhost', 'root', '', 'team13', cursorclass=pymysql.cursors.DictCursor)
+    con = pymysql.connect('127.0.0.1', 'root', '', 'team13', cursorclass=pymysql.cursors.DictCursor)
     return con, con.cursor()
 
 # Retrieving Data #
