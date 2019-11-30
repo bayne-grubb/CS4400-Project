@@ -58,33 +58,32 @@ def manTheaterOverview():
     return render_template('manager-theater-overview.html')
 @app.route("/regNav", methods=['GET','POST'])
 def regNav():
-    if request.method == 'POST':
-        g.username = request.form['uname']
-        g.password = request.form['psw']
-        is_login = (request.form.get('login') is None)
-        if is_login:
-            rows = json.loads(database_test.user_login(g.username, g.password))
-            try:
-                row = rows[0]
-            except:
-                flash('Invalid login!')
-                return render_template('login.html')
-            is_customer = row['isCustomer']
-            is_admin = row['isAdmin']
-            is_manager = row['isManager']
-            if is_customer:
-                if is_admin:
-                    return redirect('/adminCusFunc')
-                elif is_manager:
-                    return redirect('/manCusFunc')
-                else:
-                    return redirect('/cusFunc')
-            elif is_admin:
-                return redirect('/adminFunc')
-            else:
-                return redirect('/manFunc')
-        return render_template('register-navigation.html')
-
+    return render_template('register-navigation.html')
+# @app.route("/loginNav", methods=['GET', 'POST'])
+# def loginNav():
+#     if request.method == 'POST':
+#         g.username = request.form['uname']
+#         g.password = request.form['psw']
+#         rows = json.loads(database_test.user_login(g.username, g.password))
+#         try:
+#             row = rows[0]
+#         except:
+#             flash('Invalid login!')
+#             return render_template('login.html')
+#         is_customer = row['isCustomer']
+#         is_admin = row['isAdmin']
+#         is_manager = row['isManager']
+#         if is_customer:
+#             if is_admin:
+#                 return redirect('/adminCusFunc')
+#             elif is_manager:
+#                 return redirect('/manCusFunc')
+#             else:
+#                 return redirect('/cusFunc')
+#         elif is_admin:
+#             return redirect('/adminFunc')
+#         else:
+#             return redirect('/manFunc')
 @app.route("/userExploreTheater")
 def userExploreTheater():
     return render_template('user-explore-theater.html')
@@ -102,26 +101,6 @@ def viewHistory():
     return render_template('view-history.html')
 
 
-@app.route('/navRegFunc', methods=['POST'])
-def navRes():
-    if request.method == 'POST':
-        is_user = request.form.get('user') is not None
-        is_customer = request.form.get('customer') is not None
-        is_manager = request.form.get('manager') is not None
-        is_man_cus = request.form.get('man_cus') is not None
-        is_back = request.form.get('back') is not None
-        if is_user:
-            return redirect('/userReg')
-        elif is_customer:
-            return redirect('/cusReg')
-        elif is_manager:
-            return redirect('/manReg')
-        elif is_man_cus:
-            return redirect('/manCusRegNav')
-        elif is_back:
-            return redirect('/')
-        else:
-            print(request.form)
 #functions
 # will make each type of request one function (one function for post, one for get, one for put, one for delete)
 # to do this need to pass stored procedure name from front end and store params in a
