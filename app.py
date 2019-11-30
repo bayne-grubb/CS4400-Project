@@ -59,31 +59,6 @@ def manTheaterOverview():
 @app.route("/regNav", methods=['GET','POST'])
 def regNav():
     return render_template('register-navigation.html')
-# @app.route("/loginNav", methods=['GET', 'POST'])
-# def loginNav():
-#     if request.method == 'POST':
-#         g.username = request.form['uname']
-#         g.password = request.form['psw']
-#         rows = json.loads(database_test.user_login(g.username, g.password))
-#         try:
-#             row = rows[0]
-#         except:
-#             flash('Invalid login!')
-#             return render_template('login.html')
-#         is_customer = row['isCustomer']
-#         is_admin = row['isAdmin']
-#         is_manager = row['isManager']
-#         if is_customer:
-#             if is_admin:
-#                 return redirect('/adminCusFunc')
-#             elif is_manager:
-#                 return redirect('/manCusFunc')
-#             else:
-#                 return redirect('/cusFunc')
-#         elif is_admin:
-#             return redirect('/adminFunc')
-#         else:
-#             return redirect('/manFunc')
 @app.route("/userExploreTheater")
 def userExploreTheater():
     return render_template('user-explore-theater.html')
@@ -100,6 +75,32 @@ def userVisitHistory():
 def viewHistory():
     return render_template('view-history.html')
 
+
+@app.route("/loginNav", methods=['GET', 'POST'])
+def loginNav():
+    if request.method == 'POST':
+        g.username = request.form['uname']
+        g.password = request.form['psw']
+        rows = json.loads(database_test.user_login(g.username, g.password))
+        try:
+            row = rows[0]
+        except:
+            flash('Invalid login!')
+            return render_template('login.html')
+        is_customer = row['isCustomer']
+        is_admin = row['isAdmin']
+        is_manager = row['isManager']
+        if is_customer:
+            if is_admin:
+                return redirect('/adminCusFunc')
+            elif is_manager:
+                return redirect('/manCusFunc')
+            else:
+                return redirect('/cusFunc')
+        elif is_admin:
+            return redirect('/adminFunc')
+        else:
+            return redirect('/manFunc')
 
 #functions
 # will make each type of request one function (one function for post, one for get, one for put, one for delete)

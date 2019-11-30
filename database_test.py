@@ -42,7 +42,10 @@ def user_register(username, password, firstname, lastname):
 
 def customer_only_register(username, password, firstname, lastname):
     cur = setup_connection()
-    cur.callproc('customer_only_register', (username, password, firstname, lastname))
+    try:
+        cur.callproc('customer_only_register', (username, password, firstname, lastname))
+    except:
+        return json.dumps({'success':False}), 400, {'ContentType': 'application/json'}
     return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
 
@@ -54,16 +57,22 @@ def customer_add_creditcard(username, credit_card_num):
 
 def manager_only_register(username, password, firstname, lastname, com_name, emp_street, emp_city, emp_state, emp_zip):
     cur = setup_connection()
-    cur.callproc('manager_only_register',
+    try:
+        cur.callproc('manager_only_register',
                  (username, password, firstname, lastname, com_name, emp_street, emp_city, emp_state, emp_zip))
+    except:
+        return json.dumps({'success':False}), 400, {'ContentType': 'application/json'}
     return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
 
 def manager_customer_register(username, password, firstname, lastname, com_name, emp_street, emp_city, emp_state,
                               emp_zip):
     cur = setup_connection()
-    cur.callproc('manager_customer_register',
+    try:
+        cur.callproc('manager_customer_register',
                  (username, password, firstname, lastname, com_name, emp_street, emp_city, emp_state, emp_zip))
+    except:
+        return json.dumps({'success':False}), 400, {'ContentType': 'application/json'}
     return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
 
