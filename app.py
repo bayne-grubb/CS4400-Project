@@ -12,7 +12,7 @@ def index():
     return render_template('login.html')
 
 
-@app.route("/manCusReg")
+@app.route("/manCusReg", methods=['GET', 'POST'])
 def manCusReg():
     return render_template('manager-customer-registration.html', option_list=database_test.get_companies())
 
@@ -88,34 +88,10 @@ def manTheaterOverview():
     return render_template('manager-theater-overview.html')
 
 
-@app.route("/regNav", methods=['GET', 'POST'])
+@app.route("/regNav", methods=['GET','POST'])
 def regNav():
-    if request.method == 'POST':
-        g.username = request.form['uname']
-        g.password = request.form['psw']
-        is_login = (request.form.get('login') is not None)
-        if is_login:
-            rows = json.loads(database_test.user_login(g.username, g.password))
-            try:
-                row = rows[0]
-            except:
-                flash('Invalid login!')
-                return render_template('login.html')
-            is_customer = row['isCustomer']
-            is_admin = row['isAdmin']
-            is_manager = row['isManager']
-            if is_customer:
-                if is_admin:
-                    return redirect('/adminCusFunc')
-                elif is_manager:
-                    return redirect('/manCusFunc')
-                else:
-                    return redirect('/cusFunc')
-            elif is_admin:
-                return redirect('/adminFunc')
-            else:
-                return redirect('/manFunc')
-        return render_template('register-navigation.html')
+    return render_template('register-navigation.html')
+
 
 @app.route("/userExploreTheater")
 def userExploreTheater():
@@ -186,7 +162,7 @@ def createMovNav():
 # to do this need to pass stored procedure name from front end and store params in a
 # tuple and pass to db using pymysql
 
-@app.route("/manCusRegi/", methods=['POST'])  # make sure the requests are the right type(get,post etc.)
+@app.route("/manCusRegi", methods=['POST'])  # make sure the requests are the right type(get,post etc.)
 def manCusRegi():
     # do stuff i.e.
     obj = request.get_json()
@@ -206,7 +182,7 @@ def manCusRegi():
     return database_test.manager_customer_register(uname, pw, fname, lname, company, street, city, state, zipcode)
 
 
-@app.route("/userRegi/", methods=['POST'])
+@app.route("/userRegi", methods=['POST'])
 def userRegi():
     obj = request.get_json()
     fname = obj['fname']
@@ -216,7 +192,7 @@ def userRegi():
     return database_test.user_register(uname, pw, fname, lname)
 
 
-@app.route("/cusRegi/", methods=['POST'])
+@app.route("/cusRegi", methods=['POST'])
 def cusRegi():
     obj = request.get_json()
     fname = obj['fname']
@@ -258,7 +234,7 @@ def cusFilMov():
     min_mov_play_date = obj['min_mov_play_date'],
     max_mov_play_date = obj['max_mov_play_date']
     # now you have the data, pass it to pymysql
-    data = customer_filter_mov(movie_name, com_name, city, state, min_mov_play_date, max_mov_play_date)
+    data = database_test.customer_filter_mov(movie_name, com_name, city, state, min_mov_play_date, max_mov_play_date)
     return data # need to return a response just to make it not fail
 
 
