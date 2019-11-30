@@ -102,6 +102,17 @@ def loginNav():
         else:
             return redirect('/manFunc')
 
+@app.route("/createMovNav", methods=['GET','POST'])
+def createMovNav():
+    if request.method =='POST':
+        movie = request.form['mname']
+        duration = request.form['duration']
+        release = request.form['release_date']
+        success = database_test.admin_create_mov(movie, duration, release)
+        if not success:
+            flash('Unsuccessful creation')
+    return redirect('/createMovie')
+
 #functions
 # will make each type of request one function (one function for post, one for get, one for put, one for delete)
 # to do this need to pass stored procedure name from front end and store params in a
