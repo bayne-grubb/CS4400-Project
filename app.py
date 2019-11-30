@@ -1,4 +1,3 @@
-
 from flask import Flask, g, redirect, render_template, request, url_for, flash
 import database_test
 import json
@@ -6,71 +5,114 @@ import json
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
+
 # ROUTES
-@app.route("/", methods=['GET','POST'])
+@app.route("/", methods=['GET', 'POST'])
 def index():
     return render_template('login.html')
 
-@app.route("/manCusReg")
+
+@app.route("/manCusReg", methods=['GET', 'POST'])
 def manCusReg():
-    return render_template('manager-customer-registration.html')
+    return render_template('manager-customer-registration.html', option_list=database_test.get_companies())
+
+
 @app.route("/adminCompanyDetail")
 def adminCompanyDetail():
     return render_template('admin-company-detail.html')
+
+
 @app.route("/createMovie")
 def createMovie():
     return render_template('admin-create-movie.html')
+
+
 @app.route("/adminCusFunc")
 def adminCusFunc():
     return render_template('admin-customer-functionality.html')
+
+
 @app.route("/adminFunc")
 def adminFunc():
     return render_template('admin-only-functionality.html')
+
+
 @app.route("/createTheater")
 def createTheater():
     return render_template('create-theater.html')
+
+
 @app.route("/cusExpMovie")
 def cusExpMovie():
     return render_template('customer-explore-movie.html')
+
+
 @app.route("/cusFunc")
 def cusFunc():
     return render_template('customer-functionality.html')
-@app.route("/cusReg", methods=['GET','POST'])
+
+
+@app.route("/cusReg", methods=['GET', 'POST'])
 def cusReg():
     return render_template('customer-registration.html')
+
+
 @app.route("/manageUser")
 def manageUser():
     return render_template('manage-user.html')
+
+
 @app.route("/manCusFunc")
 def manCusFunc():
     return render_template('manager-customer-functionality.html')
+
+
 @app.route("/manFunc")
 def manFunc():
     return render_template('manager-only-functionality.html')
-@app.route("/manReg", methods=['GET','POST'])
+
+
+@app.route("/manReg", methods=['GET', 'POST'])
 def manReg():
-    return render_template('manager-registration.html')
+    option_list=database_test.get_companies()
+    return render_template('manager-registration.html', option_list=option_list)
+
+
 @app.route("/manScheduleMovie")
 def manScheduleMovie():
     return render_template('manager-schedule-movie.html')
+
+
 @app.route("/manTheaterOverview")
 def manTheaterOverview():
     return render_template('manager-theater-overview.html')
+
+
 @app.route("/regNav", methods=['GET','POST'])
 def regNav():
     return render_template('register-navigation.html')
+
+
 @app.route("/userExploreTheater")
 def userExploreTheater():
     return render_template('user-explore-theater.html')
+
+
 @app.route("/userFunc")
 def userFunc():
     return render_template('user-functionality.html')
-@app.route("/userReg", methods=['GET','POST'])
+
+
+@app.route("/userReg", methods=['GET', 'POST'])
 def userReg():
     return render_template('user-registration.html')
+
+
 @app.route("/userVisitHistory")
 def userVisitHistory():
     return render_template('user-visit-history.html')
+
+
 @app.route("/viewHistory")
 def viewHistory():
     return render_template('view-history.html')
@@ -100,7 +142,9 @@ def loginNav():
         elif is_admin:
             return redirect('/adminFunc')
         else:
-            return redirect('/manFunc')
+            print('wtf')
+            print(request.form)
+
 
 @app.route("/createMovNav", methods=['GET','POST'])
 def createMovNav():
@@ -136,13 +180,65 @@ def createTheaterNav():
 # to do this need to pass stored procedure name from front end and store params in a
 # tuple and pass to db using pymysql
 
-@app.route("/manCusRegi/", methods=['POST']) # make sure the requests are the right type(get,post etc.)
+@app.route("/manCusRegi", methods=['POST'])  # make sure the requests are the right type(get,post etc.)
 def manCusRegi():
-    #do stuff i.e.
-    obj = request.get_json() # the data you send from front end
-    fname = obj['fname'] # do this with all of the params
-    # now you have the data, pass it to pymysql
-    return obj # need to return a response just to make it not fail
+    # do stuff i.e.
+    obj = request.get_json()
+    fname = obj['fname']
+    lname = obj['lname']
+    pw = obj['password']
+    uname = obj['username']
+    company = obj['company']
+    street = obj['street']
+    city = obj['city']
+    state = obj['state']
+    zipcode = obj['zipcode']
+    ccnums = [obj['cc1'], obj['cc2'], obj['cc3'], obj['cc4'], obj['cc5']]
+    for num in ccnums:
+        if num:
+            database_test.customer_add_creditcard(uname, num)
+    return database_test.manager_customer_register(uname, pw, fname, lname, company, street, city, state, zipcode)
+
+
+@app.route("/userRegi", methods=['POST'])
+def userRegi():
+    obj = request.get_json()
+    fname = obj['fname']
+    lname = obj['lname']
+    pw = obj['password']
+    uname = obj['username']
+    return database_test.user_register(uname, pw, fname, lname)
+
+
+@app.route("/cusRegi", methods=['POST'])
+def cusRegi():
+    obj = request.get_json()
+    fname = obj['fname']
+    lname = obj['lname']
+    pw = obj['password']
+    uname = obj['username']
+    ccnums = [obj['cc1'], obj['cc2'], obj['cc3'], obj['cc4'], obj['cc5']]
+    for num in ccnums:
+        if num:
+            database_test.customer_add_creditcard(uname, num)
+    return database_test.customer_only_register(uname, pw, fname, lname)
+
+
+@app.route("/manRegi", methods=['POST'])
+def manRegi():
+    obj = request.get_json()
+    fname = obj['fname']
+    lname = obj['lname']
+    pw = obj['password']
+    uname = obj['username']
+    company = obj['company']
+    street = obj['street']
+    city = obj['city']
+    state = obj['state']
+    zipcode = obj['zipcode']
+    return database_test.manager_only_register(uname, pw, fname, lname, company, street, city, state, zipcode)
+
+
 @app.route("/cusFilMov/", methods=['GET']) # make sure the requests are the right type(get,post etc.)
 def cusFilMov():
     #do stuff i.e.
@@ -156,7 +252,9 @@ def cusFilMov():
     min_mov_play_date = obj['min_mov_play_date'],
     max_mov_play_date = obj['max_mov_play_date']
     # now you have the data, pass it to pymysql
-    data = customer_filter_mov(movie_name, com_name, city, state, min_mov_play_date, max_mov_play_date)
+    data = database_test.customer_filter_mov(movie_name, com_name, city, state, min_mov_play_date, max_mov_play_date)
     return data # need to return a response just to make it not fail
+
+
 if __name__ == '__main__':
     app.run()

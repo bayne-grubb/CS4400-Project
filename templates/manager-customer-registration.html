@@ -13,9 +13,10 @@
         <input type="text" id="userVal" placeholder="Enter Username" name="uname" required>
 
         <label for="company"><b>Company</b></label>
-        <select name="company" id=compVal" required>
-            <option value="amc"> AMC</option>
-            <option value="gtc"> GTC</option>
+        <select name="company" width="300px">
+            {% for o in option_list %}
+             <option value="{{ o }}" SELECTED>{{ o }}</option>
+            {% endfor %}
         </select>
     </div>
 
@@ -89,9 +90,28 @@
             <option value="WY">Wyoming</option>
         </select>
         <label for="zip"><b>Zipcode</b></label>
-        <input name="zip" placeholder="Enter Zipcode" required type="city">
+        <input name="zip" id="zipVal" placeholder="Enter Zipcode" required type="city">
     </div>
-
+    <div>
+      <label for="cc1"><b>Credit Card 1</b></label>
+      <input id="cc1Val" maxlength="16" minlength="16" placeholder="Enter Card Number" name="cc1" required>
+  </div>
+  <div>
+      <label for="cc2"><b>Credit Card 2</b></label>
+      <input id="cc2Val" maxlength="16" minlength="16" placeholder="Enter Card Number" name="cc2" >
+  </div>
+  <div>
+      <label for="cc3"><b>Credit Card 3</b></label>
+      <input id="cc3Val" maxlength="16" minlength="16" placeholder="Enter Card Number" name="cc3" >
+  </div>
+  <div>
+      <label for="cc4"><b>Credit Card 4</b></label>
+      <input id="cc4Val" maxlength="16" minlength="16" placeholder="Enter Card Number" name="cc4" >
+  </div>
+  <div>
+      <label for="cc5"><b>Credit Card 5</b></label>
+      <input id="cc5Val" maxlength="16" minlength="16" placeholder="Enter Card Number" name="cc5" >
+  </div>
     <div>
         <button id="genBtn">Register</button>
         <button id="backBtn"> Back</button>
@@ -115,6 +135,27 @@
         street = $("#streetVal").val();
         city = $("#cityVal").val();
         state = $("#stateVal").val();
+        zipcode = $("#zipVal").val();
+        cc1 = $("cc1Val").val();
+        if (cc1.length != 16) {
+            alert("Credit Card number must be 16 digits")
+        }
+        cc2 = $("cc2Val").val();
+        if (cc2.length != 16 || cc2.length != 0) {
+            alert("Credit Card number must be 16 digits")
+        }
+        cc3 = $("cc3Val").val();
+        if (cc3.length != 16 || cc3.length != 0) {
+            alert("Credit Card number must be 16 digits")
+        }
+        cc4 = $("cc4Val").val();
+        if (cc4.length != 16 || cc4.length != 0) {
+            alert("Credit Card number must be 16 digits")
+        }
+        cc5 = $("cc5Val").val();
+        if (cc5.length != 16 || cc5.length != 0) {
+            alert("Credit Card number must be 16 digits")
+        }
         if (noneEmpty(fname, lname, username, company, password, street, city, state)) {
                $.ajax({
                 type: "POST",
@@ -129,7 +170,13 @@
                     password: password,
                     street: street,
                     city: city,
-                    state: state
+                    state: state,
+                    zipcode: zipcode,
+                    cc1: cc1,
+                    cc2: cc2,
+                    cc3: cc3,
+                    cc4: cc4,
+                    cc5: cc5
                 }),
                 success: function(response) {
                     console.log(response);

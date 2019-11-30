@@ -12,11 +12,11 @@
     <div class="container">
         <label for="uname"><b>Username</b></label>
         <input type="text" placeholder="Enter Username" name="uname" required>
-
         <label for="company"><b>Company</b></label>
-        <select name="company" required>
-            <option value="amc"> AMC</option>
-            <option value="gtc"> GTC</option>
+        <select name="company" width="300px">
+            {% for o in option_list %}
+             <option value="{{ o }}" SELECTED>{{ o }}</option>
+            {% endfor %}
         </select>
     </div>
 
@@ -90,7 +90,7 @@
             <option value="WY">Wyoming</option>
         </select>
         <label for="zip"><b>Zipcode</b></label>
-        <input name="zip" placeholder="Enter Zipcode" required type="zip">
+        <input name="zip" id="zipVal" placeholder="Enter Zipcode" required type="zip">
     </div>
 
     <div>
@@ -103,10 +103,71 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" ></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-<script>
+<script type="text/javascript">
+    $(document).ready(function(){
+    $("#genBtn").button().click(function(){
+        fname = $("#fnameVal").val();
+        lname = $("#lnameVal").val();
+        username = $("#userVal").val();
+        company = $("#compVal").val();
+        password = "";
+        if ($("#passVal").val() == $("#conPassVal").val()) {
+            password = $("#passVal").val();
+        }
+        street = $("#streetVal").val();
+        city = $("#cityVal").val();
+        state = $("#stateVal").val();
+        zipcode = $("zipVal").val();
+        if (noneEmpty(fname, lname, username, company, password, street, city, state)) {
+               $.ajax({
+                type: "POST",
+                url: "manRegi/",
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify({
+                    fname: fname,
+                    lname: lname,
+                    username: username,
+                    company: company,
+                    password: password,
+                    street: street,
+                    city: city,
+                    state: state,
+                    zipcode: zipcode
+                }),
+                success: function(response) {
+                    console.log(response);
+                    // newUrl = response['newUrl'];
+                    // $( "#newUrl" ).val(window.location.href + newUrl);
+                    // $("#sucAlert").slideDown(1000, function(){
+                    //     setTimeout(function(){
+                    //         $("#sucAlert").slideUp(1000);
+                    //     }, 1000);
+                    // });
+                },
+                error: function(response) {
+                    alert(response);
+                }
+            });
+        } else {
+            alert("Invalid Url");
+        }
 
+    });
     $("#backBtn").button().click(function(){
         window.location.href = 'regNav';
     });
+});
+    /**
+    This function will check if any fields are empty.
 
+    @param:
+    @return bool - valid string or not
+    */
+    function noneEmpty(fname, lname, username, company, password, street, city, state) {
+        if (fname == "" || lname == "" || username == "" || company == "" || password == "" || street== ""|| city== ""|| state== "") {
+            return false;
+        }
+        return true;
+    }
 </script>
