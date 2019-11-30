@@ -83,14 +83,14 @@
     <div>
         <button id = "filBtn">Filter</button>
     </div>
-    <div id = >
+    <div id ="filTable">
         <!-- fill table from db here -->
     </div>
     <div>
             <button id="backBtn">Back</button>
         </div>
         <div>
-        <select>
+        <select id="ccs">
             <!-- fill cc numbers from db -->
         </select>
         <button>View</button>
@@ -101,6 +101,55 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script>
+    query = "movieNames";
+    $.ajax({
+            type: "GET",
+            url: "movieNames",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({
+                query: query
+            }),
+            success: function(response) {
+                console.log(response);
+
+            },
+            error: function(response) {
+                alert("failed");
+            }
+    })
+    .done(function(data){
+        movies = data['movies'];
+        html = ""
+        for (item in movies) {
+            html += "<option>" + movies[item] + "</option>";
+        }
+        $("#movie").html(html);
+    });
+    $.ajax({
+            type: "GET",
+            url: "getCCs",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({
+                query: query
+            }),
+            success: function(response) {
+                console.log(response);
+
+            },
+            error: function(response) {
+                alert("failed");
+            }
+    })
+    .done(function(data){
+        ccs = data['ccs'];
+                html = ""
+                for (item in ccs) {
+                    html += "<option>" + ccs[item] + "</option>";
+                }
+                $("#ccs").html(html);
+    });
     $("#backBtn").button().click(function(){
         window.location.href = '/';
     });
@@ -114,7 +163,7 @@
         query = "customer_filter_mov"
         $.ajax({
             type: "GET",
-            url: "get/",
+            url: "cusFilMov",
             contentType: "application/json",
             dataType: "json",
             data: JSON.stringify({

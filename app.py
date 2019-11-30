@@ -127,7 +127,17 @@ def cusFilMov():
     min_mov_play_date = obj['min_mov_play_date'],
     max_mov_play_date = obj['max_mov_play_date']
     # now you have the data, pass it to pymysql
-    data = customer_filter_mov(movie_name, com_name, city, state, min_mov_play_date, max_mov_play_date)
+    data = database_test.customer_filter_mov(movie_name, com_name, city, state, min_mov_play_date, max_mov_play_date)
     return data # need to return a response just to make it not fail
+@app.route("/movieNames/", methods=['GET', 'POST']) # make sure the requests are the right type(get,post etc.)
+def movieNames():
+    data = database_test.movieNames()
+    print(data)
+    return data
+@app.route("/getCCs/", methods=['GET', 'POST']) # make sure the requests are the right type(get,post etc.)
+def getCCs():
+    data = database_test.getCCs(g.username)
+    print(data)
+    return data
 if __name__ == '__main__':
     app.run()

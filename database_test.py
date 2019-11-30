@@ -14,7 +14,27 @@ def get_table(table):
     cur.execute('SELECT * from {}'.format(table))
     for row in cur.fetchall():
         print(row)
+def movieNames():
+    cur = setup_connection()
+    cur.execute('SELECT * from movie')
+    movies = []
+    for row in cur.fetchall():
+        movies.append(row['movName'])
+    print(movies)
+    data = {'movies': movies}
+    print(data)
+    return json.dumps(data)
+def getCCs(username):
+    cur = setup_connection()
+    query = 'SELECT creditCardNum from customercreditcard where username = {}'.format(username)
+    cur.execute(query)
+    ccs = []
+    for row in cur.fetchall():
+        ccs.append(row['creditCardNum'])
 
+    data = {'ccs': ccs}
+    print(data)
+    return json.dumps(data)
 
 # get_table('User')
 # get_table('Employee')
