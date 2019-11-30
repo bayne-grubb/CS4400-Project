@@ -2,25 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <form>
-        <div>
-            <button type="submit">Theater Overview</button>
-            <button type="submit">Explore Movie</button>
-        </div>
-        <div>
-            <button type="submit">Schedule Movie</button>
-            <button type="submit">Explore Theater</button>
-        </div>
-        <div>
-            <button type="submit">View History</button>
-            <button type="submit">Visit History</button>
-        </div>
-        <div>
-            <button type="submit">Back</button>
-        </div>
-    </form>
-</head>
-<body>
 
-</body>
+        <div>
+            <button id="theOverviewBtn">Theater Overview</button>
+        </div>
+        <div>
+            <button id="expMovieBtn">Explore Movie</button>
+        </div>
+        <div>
+            <button id="schedMovieBtn">Schedule Movie</button>
+        </div>
+        <div>
+            <button id="expTheBtn">Explore Theater</button>
+        </div>
+        <div>
+             <button id="viewHistBtn">View History</button>
+        </div>
+        <div>
+            <button id="visHistBtn">Visit History</button>
+        </div>
+        <div>
+            <button id="backBtn">Back</button>
+        </div>
+
+</head>
 </html>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script>
+    $("#theOverviewBtn").button().click(function(){
+        window.location.href = 'manTheaterOverview';
+    });
+    $("#expMovieBtn").button().click(function(){
+        window.location.href = 'cusExpMovie';
+    });
+    $("#schedMovieBtn").button().click(function(){
+        window.location.href = 'manScheduleMovie';
+    });
+    $("#expTheBtn").button().click(function(){
+        window.location.href = 'createTheater';
+    });
+    $("#viewHistBtn").button().click(function(){
+        window.location.href = 'viewHistory';
+    });
+    $("#visHistBtn").button().click(function(){
+        window.location.href = 'userVisitHistory';
+    });
+    $("#backBtn").button().click(function(){
+        window.location.href = '/';
+    });
+
+</script>

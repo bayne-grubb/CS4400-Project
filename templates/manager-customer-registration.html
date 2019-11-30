@@ -94,7 +94,7 @@
 
     <div>
         <button id="genBtn">Register</button>
-        <button> Back</button>
+        <button id="backBtn"> Back</button>
     </div>
 </body>
 </html>
@@ -118,7 +118,7 @@
         if (noneEmpty(fname, lname, username, company, password, street, city, state)) {
                $.ajax({
                 type: "POST",
-                url: "manCusReg/",
+                url: "manCusRegi/",
                 contentType: "application/json",
                 dataType: "json",
                 data: JSON.stringify({
@@ -149,6 +149,9 @@
             alert("Invalid Url");
         }
 
+    });
+    $("#backBtn").button().click(function(){
+        window.location.href = 'regNav';
     });
 });
     /**

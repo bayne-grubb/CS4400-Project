@@ -1,5 +1,5 @@
 from flask import Flask, redirect, render_template, request
-
+import json
 
 app = Flask(__name__)
 
@@ -8,14 +8,14 @@ app = Flask(__name__)
 def index():
     return render_template('login.html')
 
-@app.route("/manCusRegNav")
-def manCusRegNav():
+@app.route("/manCusReg")
+def manCusReg():
     return render_template('manager-customer-registration.html')
 @app.route("/adminCompanyDetail")
 def adminCompanyDetail():
     return render_template('admin-company-detail.html')
-@app.route("/adminCreateMovie")
-def adminCreateMovie():
+@app.route("/createMovie")
+def createMovie():
     return render_template('admin-create-movie.html')
 @app.route("/adminCusFunc")
 def adminCusFunc():
@@ -62,7 +62,7 @@ def userExploreTheater():
 @app.route("/userFunc")
 def userFunc():
     return render_template('user-functionality.html')
-@app.route("/userReg")
+@app.route("/userReg", methods=['GET','POST'])
 def userReg():
     return render_template('user-registration.html')
 @app.route("/userVisitHistory")
@@ -84,8 +84,8 @@ def viewHistory():
 # to do this need to pass stored procedure name from front end and store params in a
 # tuple and pass to db using pymysql
 
-@app.route("/manCusReg/", methods=['POST']) # make sure the requests are the right type(get,post etc.)
-def manCusReg():
+@app.route("/manCusRegi/", methods=['POST']) # make sure the requests are the right type(get,post etc.)
+def manCusRegi():
     #do stuff i.e.
     obj = request.get_json() # the data you send from front end
     fname = obj['fname'] # do this with all of the params
