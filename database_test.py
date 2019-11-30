@@ -14,18 +14,37 @@ def get_table(table):
     cur.execute('SELECT * from {}'.format(table))
     for row in cur.fetchall():
         print(row)
+def movieNames():
+    cur = setup_connection()
+    cur.execute('SELECT * from movie')
+    movies = []
+    for row in cur.fetchall():
+        movies.append(row['movName'])
+    print(movies)
+    data = {'movies': movies}
+    print(data)
+    return json.dumps(data)
+def getCCs(username):
+    cur = setup_connection()
+    query = 'SELECT creditCardNum from customercreditcard where username = {}'.format(username)
+    cur.execute(query)
+    ccs = []
+    for row in cur.fetchall():
+        ccs.append(row['creditCardNum'])
 
+    data = {'ccs': ccs}
+    print(data)
+    return json.dumps(data)
 
 # get_table('User')
 # get_table('Employee')
 
 def get_companies():
-    cur = setup_connection()
+    con, cur = setup_connection()
     cur.execute('SELECT * FROM Company')
     vals = []
     for row in cur.fetchall():
         vals.append(list(row.values())[0])
-    print(vals)
     return vals 
 
 # A stored procedure
@@ -120,10 +139,13 @@ def admin_filter_company(com_name, min_city, max_city, min_theater, max_theater,
 def admin_create_theater(theater_name, com_name, theater_street, theater_city, theater_state, theater_zip, capacity,
                          manager_username):
     con, cur = setup_connection()
-    cur.callproc('admin_create_theater', (
-        theater_name, com_name, theater_street, theater_city, theater_state, theater_zip, capacity, manager_username))
-    con.commit()
-
+    try:
+        cur.callproc('admin_create_theater', (
+            theater_name, com_name, theater_street, theater_city, theater_state, theater_zip, capacity, manager_username))
+        con.commit()
+    except:
+        return False
+    return True
 
 def admin_view_com_detail_emp(company_name):
     con, cur = setup_connection()
@@ -143,13 +165,12 @@ def admin_view_com_detail_th(company_name):
 
 def admin_create_mov(movie_name, movie_duration, movie_release_date):
     con, cur = setup_connection()
-    cur.callproc('admin_create_mov', (movie_name, movie_duration, movie_release_date))
-    con.commit()
-    # try:
-    #     cur.callproc('admin_create_mov', (movie_name, movie_duration, movie_release_date))
-    # except:
-    #     return False
-    # return True
+    try:
+        cur.callproc('admin_create_mov', (movie_name, movie_duration, movie_release_date))
+        con.commit()
+    except:
+        return False
+    return True
 
 def manager_filter_th(man_username, mov_name, min_mov_duration, max_mov_duration, min_mov_release_date,
                       max_mov_release_date, min_mov_play_date, max_mov_play_date, include_not_played):

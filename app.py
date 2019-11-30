@@ -1,3 +1,4 @@
+
 from flask import Flask, g, redirect, render_template, request, url_for, flash
 import database_test
 import json
@@ -12,7 +13,7 @@ def index():
     return render_template('login.html')
 
 
-@app.route("/manCusReg")
+@app.route("/manCusReg", methods=['GET', 'POST'])
 def manCusReg():
     return render_template('manager-customer-registration.html', option_list=database_test.get_companies())
 
@@ -88,34 +89,11 @@ def manTheaterOverview():
     return render_template('manager-theater-overview.html')
 
 
-@app.route("/regNav", methods=['GET', 'POST'])
+
+@app.route("/regNav", methods=['GET','POST'])
 def regNav():
-    if request.method == 'POST':
-        g.username = request.form['uname']
-        g.password = request.form['psw']
-        is_login = (request.form.get('login') is not None)
-        if is_login:
-            rows = json.loads(database_test.user_login(g.username, g.password))
-            try:
-                row = rows[0]
-            except:
-                flash('Invalid login!')
-                return render_template('login.html')
-            is_customer = row['isCustomer']
-            is_admin = row['isAdmin']
-            is_manager = row['isManager']
-            if is_customer:
-                if is_admin:
-                    return redirect('/adminCusFunc')
-                elif is_manager:
-                    return redirect('/manCusFunc')
-                else:
-                    return redirect('/cusFunc')
-            elif is_admin:
-                return redirect('/adminFunc')
-            else:
-                return redirect('/manFunc')
-        return render_template('register-navigation.html')
+    return render_template('register-navigation.html')
+
 
 @app.route("/userExploreTheater")
 def userExploreTheater():
@@ -166,9 +144,7 @@ def loginNav():
         elif is_admin:
             return redirect('/adminFunc')
         else:
-            print('wtf')
-            print(request.form)
-
+            return redirect('/manFunc')
 
 @app.route("/createMovNav", methods=['GET','POST'])
 def createMovNav():
@@ -180,6 +156,24 @@ def createMovNav():
         if not success:
             flash('Unsuccessful creation')
     return redirect('/createMovie')
+
+@app.route("/createTheaterNav", methods=['GET', 'POST'])
+def createTheaterNav():
+    print(request.form)
+    if request.method == 'POST':
+        thName = request.form['tname']
+        comName = request.form['company']
+        street = request.form['street-address']
+        city = request.form['city']
+        state = request.form['state']
+        zip = request.form['zip']
+        cap = request.form['capacity']
+        manName = request.form['manager']
+        success = database_test.admin_create_theater(thName, comName, street, city,
+                   state, zip, cap, manName)
+        if not success:
+            flash('Unsuccessful creation')
+    return redirect('/createTheater')
 
 #functions
 # will make each type of request one function (one function for post, one for get, one for put, one for delete)
@@ -258,9 +252,19 @@ def cusFilMov():
     min_mov_play_date = obj['min_mov_play_date'],
     max_mov_play_date = obj['max_mov_play_date']
     # now you have the data, pass it to pymysql
-    data = customer_filter_mov(movie_name, com_name, city, state, min_mov_play_date, max_mov_play_date)
+    data = database_test.customer_filter_mov(movie_name, com_name, city, state, min_mov_play_date, max_mov_play_date)
     return data # need to return a response just to make it not fail
 
+@app.route("/movieNames/", methods=['GET', 'POST']) # make sure the requests are the right type(get,post etc.)
+def movieNames():
+    data = database_test.movieNames()
+    print(data)
+    return data
+@app.route("/getCCs/", methods=['GET', 'POST']) # make sure the requests are the right type(get,post etc.)
+def getCCs():
+    data = database_test.getCCs(g.username)
+    print(data)
+    return data
 
 if __name__ == '__main__':
     app.run()

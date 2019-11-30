@@ -3,8 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Create Theater</title>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <script>
+            var messages = {{ messages | safe}};
+            for (var i = 0; i < messages.length; i++) {
+                alert(messages[i])
+            }
+        </script>
+    {% endif %}
+  {% endwith %}
 </head>
 <body>
+<form action="createTheaterNav" method="POST">
   <div class="container">
       <label for="tname"><b>Name</b></label>
     <input type="text" placeholder="Enter Theater Name" name="tname" required>
@@ -82,16 +93,18 @@
     </div>
     <div>
         <label for="capacity"><b>Capacity</b></label>
-        <input name="capacity" placeholder="Enter Zipcode" required type="capacity">
+        <input name="capacity" placeholder="Enter Capacity" required type="capacity">
         <label for="manager"><b>Manager</b></label>
         <select name="manager"></select>
     </div>
 
     <div>
         <button type="submit">Create</button>
-        <div>
-            <button id="backBtn">Back</button>
-        </div>
+    </div>
+</form>
+    <div>
+        <button id="backBtn">Back</button>
+    </div>
 
 
 </body>
