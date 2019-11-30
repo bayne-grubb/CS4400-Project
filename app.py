@@ -159,6 +159,24 @@ def createMovNav():
             flash('Unsuccessful creation')
     return redirect('/createMovie')
 
+@app.route("/createTheaterNav", methods=['GET', 'POST'])
+def createTheaterNav():
+    print(request.form)
+    if request.method == 'POST':
+        thName = request.form['tname']
+        comName = request.form['company']
+        street = request.form['street-address']
+        city = request.form['city']
+        state = request.form['state']
+        zip = request.form['zip']
+        cap = request.form['capacity']
+        manName = request.form['manager']
+        success = database_test.admin_create_theater(thName, comName, street, city,
+                   state, zip, cap, manName)
+        if not success:
+            flash('Unsuccessful creation')
+    return redirect('/createTheater')
+
 #functions
 # will make each type of request one function (one function for post, one for get, one for put, one for delete)
 # to do this need to pass stored procedure name from front end and store params in a
@@ -239,6 +257,17 @@ def cusFilMov():
     data = database_test.customer_filter_mov(movie_name, com_name, city, state, min_mov_play_date, max_mov_play_date)
     return data # need to return a response just to make it not fail
 
+
+@app.route("/movieNames/", methods=['GET', 'POST']) # make sure the requests are the right type(get,post etc.)
+def movieNames():
+    data = database_test.movieNames()
+    print(data)
+    return data
+@app.route("/getCCs/", methods=['GET', 'POST']) # make sure the requests are the right type(get,post etc.)
+def getCCs():
+    data = database_test.getCCs(g.username)
+    print(data)
+    return data
 
 if __name__ == '__main__':
     app.run()
