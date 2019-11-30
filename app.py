@@ -113,6 +113,24 @@ def createMovNav():
             flash('Unsuccessful creation')
     return redirect('/createMovie')
 
+@app.route("/createTheaterNav", methods=['GET', 'POST'])
+def createTheaterNav():
+    print(request.form)
+    if request.method == 'POST':
+        thName = request.form['tname']
+        comName = request.form['company']
+        street = request.form['street-address']
+        city = request.form['city']
+        state = request.form['state']
+        zip = request.form['zip']
+        cap = request.form['capacity']
+        manName = request.form['manager']
+        success = database_test.admin_create_theater(thName, comName, street, city,
+                   state, zip, cap, manName)
+        if not success:
+            flash('Unsuccessful creation')
+    return redirect('/createTheater')
+
 #functions
 # will make each type of request one function (one function for post, one for get, one for put, one for delete)
 # to do this need to pass stored procedure name from front end and store params in a
