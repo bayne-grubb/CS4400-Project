@@ -4,21 +4,22 @@
 
   <div class="container">
     <label for="fname"><b>First Name</b></label>
-    <input type="text" placeholder="Enter First Name" name="fname" required>
+    <input type="text" id="fnameVal" placeholder="Enter First Name" name="fname" required>
     <label for="lname"><b>Last Name</b></label>
-    <input type="text" placeholder="Enter Last Name" name="lname" required>
+    <input type="text" id="lnameVal"placeholder="Enter Last Name" name="lname" required>
 
   </div>
   <div class="container">
     <label for="uname"><b>Username</b></label>
-    <input type="text" placeholder="Enter Username" name="uname" required>
+    <input type="text" id="unameVal" placeholder="Enter Username" name="uname" required>
 
   </div>
     <div>
     <label for="psw"><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" name="psw" required>
+    <input type="password" id="passVal" placeholder="Enter Password" name="psw" required>
     <label for="cpsw"><b>Confirm Password</b></label>
-    <input type="confirm_password" placeholder="Confirm Password" name="cpsw" required>
+
+    <input type="password" id="conPassVal" placeholder="Confirm Password" name="cpsw" required>
     </div>
   <div>
         <button type="submit">Register</button>
@@ -36,4 +37,65 @@
         window.location.href = 'regNav';
     });
 
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+    $("#genBtn").button().click(function(){
+        fname = $("#fnameVal").val();
+        lname = $("#lnameVal").val();
+        username = $("#userVal").val();
+        password = "";
+        if ($("#passVal").val() == $("#conPassVal").val()) {
+            password = $("#passVal").val();
+        }
+        if (noneEmpty(fname, lname, username, password)) {
+               $.ajax({
+                type: "POST",
+                url: "manCusRegi/",
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify({
+                    fname: fname,
+                    lname: lname,
+                    username: username,
+                    password: password
+                }),
+                success: function(response) {
+                    console.log(response);
+                    // newUrl = response['newUrl'];
+                    // $( "#newUrl" ).val(window.location.href + newUrl);
+                    // $("#sucAlert").slideDown(1000, function(){
+                    //     setTimeout(function(){
+                    //         $("#sucAlert").slideUp(1000);
+                    //     }, 1000);
+                    // });
+                },
+                error: function(response) {
+                    alert(response);
+                }
+            });
+        } else {
+            alert("Invalid Url");
+        }
+
+    });
+    $("#backBtn").button().click(function(){
+        window.location.href = 'regNav';
+    });
+});
+    /**
+    This function will check if any fields are empty.
+
+    @param:
+    @return bool - valid string or not
+    */
+    function noneEmpty(fname, lname, username, password) {
+        if (fname == "" || lname == "" || username == "" || password == "") {
+            return false;
+        }
+        return true;
+    }
 </script>
