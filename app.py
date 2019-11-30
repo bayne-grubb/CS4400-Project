@@ -170,7 +170,18 @@ def loginNav():
             print(request.form)
 
 
-# functions
+@app.route("/createMovNav", methods=['GET','POST'])
+def createMovNav():
+    if request.method =='POST':
+        movie = request.form['mname']
+        duration = request.form['duration']
+        release = request.form['release_date']
+        success = database_test.admin_create_mov(movie, duration, release)
+        if not success:
+            flash('Unsuccessful creation')
+    return redirect('/createMovie')
+
+#functions
 # will make each type of request one function (one function for post, one for get, one for put, one for delete)
 # to do this need to pass stored procedure name from front end and store params in a
 # tuple and pass to db using pymysql
@@ -232,6 +243,24 @@ def manRegi():
     state = obj['state']
     zipcode = obj['zipcode']
     return database_test.manager_only_register(uname, pw, fname, lname, company, street, city, state, zipcode)
+
+
+@app.route("/cusFilMov/", methods=['GET']) # make sure the requests are the right type(get,post etc.)
+def cusFilMov():
+    #do stuff i.e.
+    obj = request.get_json() # the data you send from front end
+    query = obj['query'] # do this with all of the params
+
+    movie_name = obj['movie_name'],
+    com_name = obj['com_name'],
+    city = obj['city'],
+    state = obj['state'],
+    min_mov_play_date = obj['min_mov_play_date'],
+    max_mov_play_date = obj['max_mov_play_date']
+    # now you have the data, pass it to pymysql
+    data = customer_filter_mov(movie_name, com_name, city, state, min_mov_play_date, max_mov_play_date)
+    return data # need to return a response just to make it not fail
+
 
 if __name__ == '__main__':
     app.run()

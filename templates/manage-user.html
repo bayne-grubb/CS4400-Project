@@ -3,13 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Manage User</title>
-
     <div>
         <button id="backBtn">Back</button>
     </div>
-
-
 </head>
+<form action="manage_user_nav" method="post">
+    <div class="container">
+        <label for="username"><b>Username</b></label>
+        <input type="text" required>
+        <label for="status"><b>Status</b></label>
+        <select name="status" required>
+            <option value="All"> All </option>
+            <option value="Pending"> Pending</option>
+            <option value="Declined">Declined</option>
+            <option value="Approved">Approved</option>
+        </select>
+    </div>
+</form>
 </html>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" ></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
