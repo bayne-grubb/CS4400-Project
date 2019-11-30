@@ -13,7 +13,6 @@ def index():
 
 @app.route("/manCusReg")
 def manCusReg():
-
     return render_template('manager-customer-registration.html')
 @app.route("/adminCompanyDetail")
 def adminCompanyDetail():
@@ -62,7 +61,7 @@ def regNav():
     if request.method == 'POST':
         g.username = request.form['uname']
         g.password = request.form['psw']
-        is_login = (request.form.get('login') is not None)
+        is_login = (request.form.get('login') is None)
         if is_login:
             rows = json.loads(database_test.user_login(g.username, g.password))
             try:
@@ -122,7 +121,6 @@ def navRes():
         elif is_back:
             return redirect('/')
         else:
-            print('wtf')
             print(request.form)
 #functions
 # will make each type of request one function (one function for post, one for get, one for put, one for delete)
