@@ -318,7 +318,9 @@ DROP PROCEDURE IF EXISTS user_register;
 DELIMITER $$
 CREATE PROCEDURE `user_register`(IN i_username VARCHAR(50), IN i_password VARCHAR(50), IN i_firstname VARCHAR(50), IN i_lastname VARCHAR(50))
 BEGIN
+	IF char_length(i_password) >= 8 THEN
 		INSERT INTO User (username, password, firstname, lastname, status) VALUES (i_username, MD5(i_password), i_firstname, i_lastname, "Pending");
+	END IF;
 END$$
 DELIMITER ;
 
