@@ -38,7 +38,7 @@ def user_register(username, password, firstname, lastname):
         return json.dumps({'success':False}), 400, {'ContentType': 'application/json'}
     return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
-print(user_register('calcultron', 'asdkljfdslfds', 'fname', 'lname'))
+# print(user_register('calcultron', 'asdkljfdslfds', 'fname', 'lname'))
 
 def customer_only_register(username, password, firstname, lastname):
     cur = setup_connection()
