@@ -3,24 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <title>Create Movie</title>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <script>
+            var messages = {{ messages | safe}};
+            for (var i = 0; i < messages.length; i++) {
+                alert(messages[i])
+            }
+        </script>
+    {% endif %}
+  {% endwith %}
 </head>
 <body>
-<div>
-    <label for="mname"><b>Name</b></label>
-    <input type="text" placeholder="Enter Movie Name" name="mname" required>
-    <label for="duration"><b>Duration</b></label>
-    <input type="text" placeholder="Enter Duration" name="duration" required>
-</div>
-<div>
-    <label for="release date"><b>Release Date</b></label>
-    <input type="text" placeholder="YYYY/MM/DD" name="release date" required>
-</div>
+<form action="createMovNav" method="POST">
+    <div>
+        <label for="mname"><b>Name</b></label>
+        <input type="text" placeholder="Enter Movie Name" name="mname" required>
+        <label for="duration"><b>Duration</b></label>
+        <input type="text" placeholder="Enter Duration" name="duration" required>
+    </div>
+    <div>
+        <label for="release_date"><b>Release Date</b></label>
+        <input type="text" placeholder="YYYY/MM/DD" name="release_date" required>
+    </div>
+    
+    <div>
+        <button type="submit">Create</button>
+    </div>
+</form>
 
 <div>
-    <button type="submit">Create</button>
-    <div>
-            <button id="backBtn">Back</button>
-        </div>
+    <button id="backBtn">Back</button>
+</div>
 
 
 </body>
