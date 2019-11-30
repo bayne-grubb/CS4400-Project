@@ -59,7 +59,9 @@ def cusReg():
 
 @app.route("/manageUser")
 def manageUser():
-    return render_template('manage-user.html')
+    userbois = database_test.admin_filter_user('', 'ALL', 'username', 'ASC')
+    print(userbois)
+    return render_template('manage-user.html', users=userbois)
 
 
 @app.route("/manCusFunc")
