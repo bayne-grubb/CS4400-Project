@@ -59,7 +59,9 @@ def cusReg():
 
 @app.route("/manageUser")
 def manageUser():
-    return render_template('manage-user.html')
+    userbois = database_test.admin_filter_user('', 'ALL', 'username', 'ASC')
+    print(userbois)
+    return render_template('manage-user.html', users=userbois)
 
 
 @app.route("/manCusFunc")
@@ -254,6 +256,7 @@ def cusFilMov():
     # now you have the data, pass it to pymysql
     data = database_test.customer_filter_mov(movie_name, com_name, city, state, min_mov_play_date, max_mov_play_date)
     return data # need to return a response just to make it not fail
+
 
 @app.route("/movieNames/", methods=['GET', 'POST']) # make sure the requests are the right type(get,post etc.)
 def movieNames():

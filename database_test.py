@@ -121,7 +121,7 @@ def admin_filter_user(username, status, sort_by, sort_direction):
     cur.callproc('admin_filter_user', (username, status, sort_by, sort_direction))
     cur.execute('SELECT * FROM AdFilterUser')
     con.commit()
-    return json.dumps(cur.fetchall())
+    return cur.fetchall()
 
 # print(admin_filter_user('', 'Approved', 'username', 'DESC'))
 

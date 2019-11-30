@@ -3,21 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>Manage User</title>
-    <div>
-        <button id="backBtn">Back</button>
-    </div>
 </head>
 <form action="manage_user_nav" method="post">
     <div class="container">
         <label for="username"><b>Username</b></label>
-        <input type="text" required>
+        <input id="uname" type="text">
         <label for="status"><b>Status</b></label>
-        <select name="status" required>
+        <select id="status" name="status">
             <option value="All"> All </option>
             <option value="Pending"> Pending</option>
             <option value="Declined">Declined</option>
             <option value="Approved">Approved</option>
         </select>
+    </div>
+    <div>
+        <button onclick="filterBy()">Filter</button>
+        <button>Approve</button>
+        <button>Decline</button>
+    </div>
+    <div>
+        <table id="table">
+        <tr>
+            <th onclick="sortTable(0)">Username</th>
+            <th onclick="sortTable(1)">Credit Card Count</th>
+            <th onclick="sortTable(2)">User Type</th>
+            <th onclick="sortTable(3)">Status</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user["username"] }}</td>
+            <td>{{ user["creditCardCount"] }}</td>
+            <td>{{ user["userType"] }}</td>
+            <td>{{ user["status"] }}</td>
+        </tr>
+        {% endfor %}
+        </table>
+    </div>
+    <div>
+        <button id="backBtn">Back</button>
     </div>
 </form>
 </html>
@@ -29,4 +52,93 @@
         window.location.href = '/';
     });
 
+    function sortTable(n) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("table");
+  switching = true;
+  //Set the sorting direction to ascending:
+  dir = "asc";
+  /*Make a loop that will continue until
+  no switching has been done:*/
+  while (switching) {
+    //start by saying: no switching is done:
+    switching = false;
+    rows = table.rows;
+    /*Loop through all table rows (except the
+    first, which contains table headers):*/
+    for (i = 1; i < (rows.length - 1); i++) {
+      //start by saying there should be no switching:
+      shouldSwitch = false;
+      /*Get the two elements you want to compare,
+      one from current row and one from the next:*/
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      /*check if the two rows should switch place,
+      based on the direction, asc or desc:*/
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch= true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      /*If a switch has been marked, make the switch
+      and mark that a switch has been done:*/
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      //Each time a switch is done, increase this count by 1:
+      switchcount ++;
+    } else {
+      /*If no switching has been done AND the direction is "asc",
+      set the direction to "desc" and run the while loop again.*/
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+
+ //  Search functionality
+      $("#uname").keyup(function () {
+        //split the current value of searchInput
+        var data = this.value.split(" ");
+        //create a jquery object of the rows
+        var jo = $("#tbody").find("tr");
+        if (this.value == "") {
+            jo.show();
+            return;
+        }
+        //hide all the rows
+        jo.hide();
+
+        //Recusively filter the jquery object to get results.
+        jo.filter(function (i, v) {
+            var $t = $(this);
+            for (var d = 0; d < data.length; ++d) {
+                if ($t.is(":contains('" + data[d] + "')")) {
+                    return true;
+                }
+            }
+            return false;
+        })
+        //show the rows that match.
+        .show();
+        }).focus(function () {
+        this.value = "";
+        $(this).css({
+            "color": "black"
+        });
+        $(this).unbind('focus');
+        }).css({
+        "color": "#C0C0C0"
+        });
 </script>
