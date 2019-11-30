@@ -18,7 +18,14 @@ def get_table(table):
 
 # get_table('User')
 # get_table('Employee')
-
+def get_companies():
+    cur = setup_connection()
+    cur.execute('SELECT * FROM Company')
+    vals = []
+    for row in cur.fetchall():
+        vals.append(list(row.values())[0])
+    print(vals)
+    return vals
 
 # A stored procedure
 def user_login(username, password):

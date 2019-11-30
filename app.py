@@ -14,7 +14,7 @@ def index():
 
 @app.route("/manCusReg")
 def manCusReg():
-    return render_template('manager-customer-registration.html')
+    return render_template('manager-customer-registration.html', option_list=database_test.get_companies())
 
 
 @app.route("/adminCompanyDetail")
@@ -74,7 +74,8 @@ def manFunc():
 
 @app.route("/manReg", methods=['GET', 'POST'])
 def manReg():
-    return render_template('manager-registration.html')
+    option_list=database_test.get_companies()
+    return render_template('manager-registration.html', option_list=option_list)
 
 
 @app.route("/manScheduleMovie")
@@ -177,14 +178,60 @@ def loginNav():
 @app.route("/manCusRegi/", methods=['POST'])  # make sure the requests are the right type(get,post etc.)
 def manCusRegi():
     # do stuff i.e.
-    obj = request.get_json()  # the data you send from front end
-    fname = obj['fname']  # do this with all of the params
-    # now you have the data, pass it to pymysql
-    return obj  # need to return a response just to make it not fail
+    obj = request.get_json()
+    fname = obj['fname']
+    lname = obj['lname']
+    pw = obj['password']
+    uname = obj['username']
+    company = obj['company']
+    street = obj['street']
+    city = obj['city']
+    state = obj['state']
+    zipcode = obj['zipcode']
+    ccnums = [obj['cc1'], obj['cc2'], obj['cc3'], obj['cc4'], obj['cc5']]
+    for num in ccnums:
+        if num:
+            database_test.customer_add_creditcard(uname, num)
+    return database_test.manager_customer_register(uname, pw, fname, lname, company, street, city, state, zipcode)
+
 
 @app.route("/userRegi/", methods=['POST'])
 def userRegi():
-    
+    obj = request.get_json()
+    fname = obj['fname']
+    lname = obj['lname']
+    pw = obj['password']
+    uname = obj['username']
+    return database_test.user_register(uname, pw, fname, lname)
+
+
+@app.route("/cusRegi/", methods=['POST'])
+def cusRegi():
+    obj = request.get_json()
+    fname = obj['fname']
+    lname = obj['lname']
+    pw = obj['password']
+    uname = obj['username']
+    ccnums = [obj['cc1'], obj['cc2'], obj['cc3'], obj['cc4'], obj['cc5']]
+    for num in ccnums:
+        if num:
+            database_test.customer_add_creditcard(uname, num)
+    return database_test.customer_only_register(uname, pw, fname, lname)
+
+
+@app.route("/manRegi", methods=['POST'])
+def manRegi():
+    obj = request.get_json()
+    fname = obj['fname']
+    lname = obj['lname']
+    pw = obj['password']
+    uname = obj['username']
+    company = obj['company']
+    street = obj['street']
+    city = obj['city']
+    state = obj['state']
+    zipcode = obj['zipcode']
+    return database_test.manager_only_register(uname, pw, fname, lname, company, street, city, state, zipcode)
 
 if __name__ == '__main__':
     app.run()
